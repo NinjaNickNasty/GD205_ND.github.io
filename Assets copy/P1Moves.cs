@@ -5,47 +5,88 @@ using UnityEngine;
 public class P1Moves : MonoBehaviour
 {
     Vector3 playerPos;
+    Vector3 startPos;
     public Transform destination;
-    public Transform hazard;
+   
 
+
+    GameObject[] Hazard;
+
+    GameObject[] Obstacle;
+
+    public TextMesh playerMessage;
 
     // Start is called before the first frame update
     void Start()
     {
         playerPos = transform.position;
+
+        startPos = playerPos;
+
+        Hazard = GameObject.FindGameObjectsWithTag("Hazard");
+        Obstacle = GameObject.FindGameObjectsWithTag("Obstacle");
     }
 
     // Update is called once per frame
     void Update()
     {
+        Vector3 newPos = playerPos;
+
+        playerMessage.text = "welcome to the game";
+
         if (Input.GetKeyDown(KeyCode.W))
-        { playerPos += transform.forward;  //moves player 
+        {
+            playerPos += transform.forward;  //moves player 
             transform.position = playerPos;
         }
 
         if (Input.GetKeyDown(KeyCode.S))
-        { playerPos -= transform.forward;
+        {
+            playerPos -= transform.forward;
             transform.position = playerPos;
         }
 
         if (Input.GetKeyDown(KeyCode.A))
-        { playerPos -= transform.right;
+        {
+            playerPos -= transform.right;
             transform.position = playerPos;
         }
 
         if (Input.GetKeyDown(KeyCode.D))
-        { playerPos += transform.right;
+        {
+            playerPos += transform.right;
             transform.position = playerPos;
         }
 
-        if (playerPos.x == hazard.position.x &&
-        playerPos.y == hazard.position.y) 
-            { playerPos -= transform.up;
+        if (playerPos.x == Hazard.position.x &&
+                playerPos.z == Hazard.position.z)
+        {
+            playerPos -= transform.up;
+
+            transform.position = playerPos;
+
         }
 
-        transform.position = playerPos;
+
+        bool inASpace = false;
+
+
+        for (int i = 0; i < Obstacle.Length; i++)
+        {
+
+            if (newPos.x == Obstacle[i].transform.position.x &&
+                newPos.z == Obstacle[i].transform.position.z)
+            {
+                //if the above is true, you are in a block
+                //make inABlock true, so we know you are in a block
+                inASpace = true;
+            }
+        }
+        if (!inASpace)
+        {
+            playerPos = newPos;
+        }
 
     }
-    
-    }
+}
 
